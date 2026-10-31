@@ -2634,6 +2634,8 @@ const MAPA=(function(){
 const VIEWS={mapa:document.getElementById('viewMapa'),idx:document.getElementById('viewIdx'),cong:document.getElementById('viewCong'),prof:document.getElementById('viewProf'),leis:document.getElementById('viewLeis')};
 const FOOT={idx:document.getElementById('footSrc').textContent,cong:'Dados: TSE, eleições de 2026 (via Hub Político)',prof:'Dados: TSE, eleições de 2026 (via Hub Político)',leis:'Dados: Senado Federal · Legislação Federal (dados abertos) · consultado em 29/10/2026',mapa:'Dados: TSE, IBGE, Câmara dos Deputados e Senado Federal · conferido em 29/10/2026'};
 let view='idx';
+fetch('data/gov_meta.json').then(r=>r.ok?r.json():null).then(m=>{ if(m&&m.atualizado){ FOOT.cong+=' · atualizado em '+m.atualizado; FOOT.prof=FOOT.cong; if(view==='cong'||view==='prof') document.getElementById('footSrc').textContent=FOOT[view]; } }).catch(()=>{});
+fetch('data/mapa/meta.json').then(r=>r.ok?r.json():null).then(m=>{ if(m&&m.parl){ FOOT.mapa='Dados: TSE, IBGE, Câmara dos Deputados e Senado Federal · deputados e senadores conferidos em '+m.parl+'; governos e prefeituras (TSE) conferidos em '+(m.tse||'29/10/2026'); if(view==='mapa') document.getElementById('footSrc').textContent=FOOT.mapa; } }).catch(()=>{});
 function setView(v,push){
   if(v===view) return; view=v;
   Object.entries(VIEWS).forEach(([k,el])=>el.hidden=k!==v);
